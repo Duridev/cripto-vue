@@ -7,13 +7,16 @@ const monedas = ref([
   { codigo: 'CLP', texto: 'Peso Chileno' },
   { codigo: 'MXN', texto: 'Peso Mexicano' },
   { codigo: 'EUR', texto: 'Euro' },
-])
+]);
+
+const criptomonedas = ref([]);
 
 onMounted(() => {
-  const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD'
+  const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD';
   fetch(url)
     .then(respuesta => respuesta.json())
-})
+    .then(data => { criptomonedas.value = data.Data;});
+});
 
 
 </script>
@@ -26,6 +29,7 @@ onMounted(() => {
 
     <div class="contenido">
       <form class="formulario">
+
         <div class="campo">
           <label for="moneda">Moneda:</label>
           <select id="moneda">
@@ -37,6 +41,21 @@ onMounted(() => {
             </option>
           </select>
         </div>
+
+        <div class="campo">
+          <label for="cripto">Criptomoneda:</label>
+          <select id="cripto">
+            <option value="">-- Selecciona --</option>
+            <option 
+              v-for="criptomoneda in criptomonedas" 
+              :value="criptomoneda.CoinInfo.Name"
+              >{{ criptomoneda.CoinInfo.FullName }}
+            </option>
+          </select>
+        </div>
+
+        <input type="submit" value="Cotizar" />
+
       </form>
     </div>
 

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import Alerta from './components/Alerta.vue'
 
 
 const monedas = ref([
@@ -10,6 +11,7 @@ const monedas = ref([
 ]);
 
 const criptomonedas = ref([]);
+const error = ref('')
 const cotizar = reactive({
   moneda: '',
   criptomoneda: ''
@@ -25,9 +27,13 @@ onMounted(() => {
 const cotizarCripto = () => {
   // Validar de corizar esté lleno
   if(Object.values(cotizar).includes('')) {
-    console.log('Todos loc campos son obligatorios');
+    error.value = 'Todos loc campos son obligatorios';
+    setTimeout(() => {
+      error.value = ''
+    }, 2500);
     return
   }
+  error.value = ''
   console.log('cotizando...');
 }
 
@@ -41,6 +47,9 @@ const cotizarCripto = () => {
     <h1 class="titulo">Cotizadoer de <span>Criptomonedas</span></h1>
 
     <div class="contenido">
+      <Alerta v-if="error">
+        {{ error }}
+      </Alerta>
       <form 
         class="formulario"
         @submit.prevent="cotizarCripto"

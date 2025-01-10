@@ -22,6 +22,15 @@ onMounted(() => {
     .then(data => { criptomonedas.value = data.Data;});
 });
 
+const cotizarCripto = () => {
+  // Validar de corizar esté lleno
+  if(Object.values(cotizar).includes('')) {
+    console.log('Todos loc campos son obligatorios');
+    return
+  }
+  console.log('cotizando...');
+}
+
 
 </script>
 
@@ -32,7 +41,10 @@ onMounted(() => {
     <h1 class="titulo">Cotizadoer de <span>Criptomonedas</span></h1>
 
     <div class="contenido">
-      <form class="formulario">
+      <form 
+        class="formulario"
+        @submit.prevent="cotizarCripto"
+      >
 
         <div class="campo">
           <label for="moneda">Moneda:</label>

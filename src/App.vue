@@ -1,7 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import Alerta from './components/Alerta.vue'
-import Spiner from './components/Spiner.vue'
+import Spiner from './components/Spinner.vue'
+import useCripto from './composable/useCripto'
 
 
 const monedas = ref([
@@ -115,7 +116,7 @@ const mostrarResultado = computed(() => {
 
       </form>
 
-      <Spiner v-if="cargando" />
+      <Spinner v-if="cargando" />
 
       <div class="contenedor-resultado" v-if="mostrarResultado">
         <h2>Cotización</h2>

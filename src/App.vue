@@ -1,32 +1,16 @@
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import Alerta from './components/Alerta.vue'
-import Spiner from './components/Spinner.vue'
-import useCripto from './composable/useCripto'
+import Spinner from './components/Spinner.vue'
+import useCripto from './composables/useCripto'
 
+const { monedas, criptomonedas, cargando, cotizacion, obtenerCotizacion, mostrarResultado } = useCripto()
 
-const monedas = ref([
-  { codigo: 'USD', texto: 'Dolar de Estados Unidos' },
-  { codigo: 'CLP', texto: 'Peso Chileno' },
-  { codigo: 'MXN', texto: 'Peso Mexicano' },
-  { codigo: 'EUR', texto: 'Euro' },
-]);
-
-const criptomonedas = ref([]);
 const error = ref('')
 const cotizar = reactive({
   moneda: '',
   criptomoneda: ''
 })
-const cotizacion = ref({})
-const cargando = ref(false)
-
-onMounted(() => {
-  const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD';
-  fetch(url)
-    .then(respuesta => respuesta.json())
-    .then(data => { criptomonedas.value = data.Data;});
-});
 
 const cotizarCripto = () => {
   // Validar de corizar esté lleno
@@ -38,32 +22,8 @@ const cotizarCripto = () => {
     return
   }
   error.value = ''
-  obtenerCotizacion()
+  obtenerCotizacion(cotizar)
 }
-
-const obtenerCotizacion = async () => {
-  cotizacion.value = {}
-  cargando.value = true
-
-  try {
-    const { moneda, criptomoneda } = cotizar
-    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`
-    
-    const respuesta = await fetch(url)
-    const data = await respuesta.json()
-    cotizacion.value = data.DISPLAY[criptomoneda][moneda]
-    
-  } catch (error) {
-    console.log(error);
-  } finally {
-    cargando.value = false
-  }
-
-}
-
-const mostrarResultado = computed(() => {
-  return Object.values(cotizacion.value).length > 0
-})
 
 </script>
 
@@ -79,7 +39,7 @@ const mostrarResultado = computed(() => {
       </Alerta>
       <form 
         class="formulario"
-        @submit.prevent="obtenerCotizacion"
+        @submit.prevent="cotizarCripto"
       >
 
         <div class="campo">
